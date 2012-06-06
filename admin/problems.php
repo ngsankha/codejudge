@@ -9,7 +9,7 @@
 		connectdb();
 ?>
               <li class="active"><a href="#">Admin Panel</a></li>
-              <li><a href="#about">Users</a></li>
+              <li><a href="users.php">Users</a></li>
               <li><a href="logout.php">Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->
