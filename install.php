@@ -6,7 +6,9 @@
 		$l2 = '$user="'.$_POST['username'].'";';
 		$l3 = '$password="'.$_POST['password'].'";';
 		$l4 = '$database="'.$_POST['name'].'";';
-		fwrite($fp, "<?php\n$l1\n$l2\n$l3\n$l4\n?>");
+		$l5 = '$compilerhost="'.$_POST['chost'].'";';
+		$l6 = '$compilerport='.$_POST['cport'].';';
+		fwrite($fp, "<?php\n$l1\n$l2\n$l3\n$l4\n$l5\n$l6\n?>");
 		fclose($fp);
 		include('dbinfo.php');
 		mysql_connect($host,$user,$password);
@@ -55,7 +57,6 @@
 		$hash=crypt($pass,$salt);
 		$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('$pass', '$salt', '$hash', '".$_POST['email']."')";
 		mysql_query($sql);
-		mkdir("solution");
 		header("Location: install.php?installed=1");
 	}
 ?>
@@ -125,6 +126,8 @@
     Password: <input type="password" name="password"/><br/>
     Database Name: <input type="text" name="name" value="codejudge"/><br/>
     Email: <input type="email" name="email"/><br/>
+    Compiler Server Host: <input type="text" name="chost" value="localhost"/><br/>
+    Compiler Server Port: <input type="text" name="cport" value="3029"/><br/>
     <input type="submit" class="btn btn-primary" value="Install"/>
     </form>
     <?php } else {?>

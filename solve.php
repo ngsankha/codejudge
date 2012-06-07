@@ -20,7 +20,7 @@
     <div class="container">
     <?php
         if(isset($_GET['cerror']))
-          echo("<div class=\"alert alert-error\">\n<strong>The following errors occured:</strong><br/>\n".$_SESSION['cerror']."\n</div>");
+          echo("<div class=\"alert alert-error\">\n<strong>The following errors occured:</strong><br/>\n<pre>\n".$_SESSION['cerror']."\n</pre>\n</div>");
         else if(isset($_GET['oerror']))
           echo("<div class=\"alert alert-error\">\nYour program output did not match the solution for the problem. Please check your program and try again.\n</div>");
         else if(isset($_GET['lerror']))

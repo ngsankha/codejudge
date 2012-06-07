@@ -1,5 +1,6 @@
 <?php
 	require_once('functions.php');
+	include('dbinfo.php');
 	connectdb();
 	$query = "SELECT * FROM prefs";
         $result = mysql_query($query);
@@ -17,43 +18,35 @@
 			$query = "UPDATE solve SET lang='".$_POST['lang']."', attempts='".($fields['attempts']+1)."', soln='".mysql_real_escape_string($_POST['soln'])."', filename='".mysql_real_escape_string($_POST['filename'])."' WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
 		}
 		mysql_query($query);
-		$filename = "solution/".$_SESSION['username']."/".$_POST['filename'];
-		$fp = fopen($filename, 'w');
-		fwrite($fp, $_POST['soln']);
-		fclose($fp);
-		if($_POST['lang']=='c' and $accept['c'] == 1)
-			include('lang/c.php');
-		else if($_POST['lang']=='cpp' and $accept['cpp'] == 1)
-			include('lang/cpp.php');
-		else if($_POST['lang']=='java' and $accept['java'] == 1)
-			include('lang/java.php');
-		else if($_POST['lang']=='python' and $accept['python'] == 1)
-			include('lang/python.php');
-		else
-			header("Location: solve.php?lerror=1&id=".$_POST['id']);
-		$res=lang_compile($filename, $_POST['id']);
-		if($res == 1 or $res == 2) {
-			$fp = fopen("$filename.err", 'r');
-			$contents = fread($fp, filesize("$filename.err"));
-			fclose($fp);
-		}
-		unlink("$filename");
-		unlink("$filename.in");
-		unlink("$filename.out");
-		unlink("$filename.err");
-		if($res == 1) {
+		$socket = fsockopen($compilerhost, $compilerport);
+		fwrite($socket, $_POST['filename']."\n");
+		$soln = str_replace("\n", '$_n_$', treat($_POST['soln']));
+		fwrite($socket, $soln."\n");
+		$query = "SELECT input, output FROM problems WHERE sl='".$_POST['id']."'";
+		$result = mysql_query($query);
+		$fields = mysql_fetch_array($result);
+		$input = str_replace("\n", '$_n_$', treat($fields['input']));
+		fwrite($socket, $input."\n");
+		fwrite($socket, $_POST['lang']."\n");
+		$status = fgets($socket);
+		$contents = "";
+		while(!feof($socket))
+			$contents = $contents."\n".fgets($socket);
+		if($status == 0) {
 			$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
 			mysql_query($query);
-			$_SESSION['cerror'] = nl2br(trim($contents));
+			$_SESSION['cerror'] = trim($contents);
 			header("Location: solve.php?cerror=1&id=".$_POST['id']);
-		} else if($res == 2) {
-			$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
-			mysql_query($query);
-			header("Location: solve.php?oerror=1&id=".$_POST['id']);
-		} else if($res == 0) {
-			$query = "UPDATE solve SET status=2 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
-			mysql_query($query);
-			header("Location: index.php?success=1");
+		} else if($status == 1) {
+			if(trim($contents) == trim(treat($fields['output']))) {
+				$query = "UPDATE solve SET status=2 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+				mysql_query($query);
+				header("Location: index.php?success=1");
+			} else {
+				$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+				mysql_query($query);
+				header("Location: solve.php?oerror=1&id=".$_POST['id']);
+			}
 		}
 	}
 ?>
