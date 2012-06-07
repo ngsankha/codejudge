@@ -25,7 +25,6 @@
 				$hash = crypt($_POST['password'], $salt);
 				$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('".$_POST['username']."', '$salt', '$hash', '".$_POST['email']."')";
 				mysql_query($sql);
-				mkdir("solution/".$_POST['username']);
 				header("Location: login.php?registered=1");
 			}
 		}
