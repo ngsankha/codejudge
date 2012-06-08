@@ -3,27 +3,29 @@
 	if(loggedin())
 		header("Location: index.php");
 	else if(isset($_POST['action'])) {
+		$username = mysql_real_escape_string($_POST['username']);
 		if($_POST['action']=='login') {
 			connectdb();
-			$query = "SELECT salt,hash FROM users WHERE username='".$_POST['username']."'";
+			$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
 			$result = mysql_query($query);
 			$fields = mysql_fetch_array($result);
 			$currhash = crypt($_POST['password'], $fields['salt']);
 			if($currhash == $fields['hash']) {
-				$_SESSION['username'] = $_POST['username'];
+				$_SESSION['username'] = $username;
 				header("Location: index.php");
 			} else
 				header("Location: login.php?error=1");
 		} else if($_POST['action']=='register') {
+			$email = mysql_real_escape_string($_POST['email']);
 			connectdb();
-			$query = "SELECT salt,hash FROM users WHERE username='".$_POST['username']."'";
+			$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
 			$result = mysql_query($query);
 			if(mysql_num_rows($result)!=0)
 				header("Location: login.php?exists=1");
 			else {
 				$salt = randomAlphaNum(5);
 				$hash = crypt($_POST['password'], $salt);
-				$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('".$_POST['username']."', '$salt', '$hash', '".$_POST['email']."')";
+				$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('".$username."', '$salt', '$hash', '".$email."')";
 				mysql_query($sql);
 				header("Location: login.php?registered=1");
 			}

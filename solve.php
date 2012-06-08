@@ -41,7 +41,7 @@
       ?>
     <h1><small>Submit Solution</small></h1>
       <?php
-      	if(isset($_GET['id'])) {
+      	if(isset($_GET['id']) and is_numeric($_GET['id'])) {
       		$query = "SELECT * FROM problems WHERE sl='".$_GET['id']."'";
           	$result = mysql_query($query);
           	$row = mysql_fetch_array($result);
@@ -52,10 +52,12 @@
       ?>
       <hr/>
       <?php
-        $query = "SELECT * FROM solve WHERE (problem_id='".$_GET['id']."' AND username='".$_SESSION['username']."')";
-        $result = mysql_query($query);
-        $num = mysql_num_rows($result);
-        $fields = mysql_fetch_array($result);
+        if(is_numeric($_GET['id'])) {
+          $query = "SELECT * FROM solve WHERE (problem_id='".$_GET['id']."' AND username='".$_SESSION['username']."')";
+          $result = mysql_query($query);
+          $num = mysql_num_rows($result);
+          $fields = mysql_fetch_array($result);
+        }
       ?>
       <form method="post" action="eval.php">
       <?php if($num == 0)
@@ -63,7 +65,7 @@
         else
           echo('<input type="hidden" name="ctype" value="change"/>');
       ?>
-      <input type="hidden" name="id" value="<?php echo($_GET['id']);?>"/>
+      <input type="hidden" name="id" value="<?php if(is_numeric($_GET['id'])) echo($_GET['id']);?>"/>
       <input type="hidden" name="lang" id="hlang" value="<?php if($num == 0) echo('c'); else echo($fields['lang']);?>"/>
       <div class="btn-group">
         <div id="blank"></div>
