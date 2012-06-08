@@ -25,7 +25,9 @@
           echo("<div class=\"alert alert-error\">\nYour program output did not match the solution for the problem. Please check your program and try again.\n</div>");
         else if(isset($_GET['lerror']))
           echo("<div class=\"alert alert-error\">\nYou did not use one of the allowed languages. Please use a language that is allowed.\n</div>");
-        
+        else if(isset($_GET['serror']))
+          echo("<div class=\"alert alert-error\">\nCould not connect to the compiler server. Please contact the admin to solve the problem.\n</div>");
+          
         $query = "SELECT * FROM prefs";
         $result = mysql_query($query);
         $accept = mysql_fetch_array($result);

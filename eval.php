@@ -19,34 +19,37 @@
 		}
 		mysql_query($query);
 		$socket = fsockopen($compilerhost, $compilerport);
-		fwrite($socket, $_POST['filename']."\n");
-		$soln = str_replace("\n", '$_n_$', treat($_POST['soln']));
-		fwrite($socket, $soln."\n");
-		$query = "SELECT input, output FROM problems WHERE sl='".$_POST['id']."'";
-		$result = mysql_query($query);
-		$fields = mysql_fetch_array($result);
-		$input = str_replace("\n", '$_n_$', treat($fields['input']));
-		fwrite($socket, $input."\n");
-		fwrite($socket, $_POST['lang']."\n");
-		$status = fgets($socket);
-		$contents = "";
-		while(!feof($socket))
-			$contents = $contents."\n".fgets($socket);
-		if($status == 0) {
-			$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
-			mysql_query($query);
-			$_SESSION['cerror'] = trim($contents);
-			header("Location: solve.php?cerror=1&id=".$_POST['id']);
-		} else if($status == 1) {
-			if(trim($contents) == trim(treat($fields['output']))) {
-				$query = "UPDATE solve SET status=2 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
-				mysql_query($query);
-				header("Location: index.php?success=1");
-			} else {
+		if($socket) {
+			fwrite($socket, $_POST['filename']."\n");
+			$soln = str_replace("\n", '$_n_$', treat($_POST['soln']));
+			fwrite($socket, $soln."\n");
+			$query = "SELECT input, output FROM problems WHERE sl='".$_POST['id']."'";
+			$result = mysql_query($query);
+			$fields = mysql_fetch_array($result);
+			$input = str_replace("\n", '$_n_$', treat($fields['input']));
+			fwrite($socket, $input."\n");
+			fwrite($socket, $_POST['lang']."\n");
+			$status = fgets($socket);
+			$contents = "";
+			while(!feof($socket))
+				$contents = $contents."\n".fgets($socket);
+			if($status == 0) {
 				$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
 				mysql_query($query);
-				header("Location: solve.php?oerror=1&id=".$_POST['id']);
+				$_SESSION['cerror'] = trim($contents);
+				header("Location: solve.php?cerror=1&id=".$_POST['id']);
+			} else if($status == 1) {
+				if(trim($contents) == trim(treat($fields['output']))) {
+					$query = "UPDATE solve SET status=2 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+					mysql_query($query);
+					header("Location: index.php?success=1");
+				} else {
+					$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+					mysql_query($query);
+					header("Location: solve.php?oerror=1&id=".$_POST['id']);
+				}
 			}
-		}
+		} else
+			header("Location: solve.php?serror=1&id=".$_POST['id']);
 	}
 ?>
