@@ -2,7 +2,7 @@
 	include('functions.php');
 	connectdb();
 	if($_POST['action']=='email') {
-		mysql_query("UPDATE users SET email='".$_POST['email']."' WHERE username='".$_SESSION['username']."'");
+		mysql_query("UPDATE users SET email='".mysql_real_escape_string($_POST['email'])."' WHERE username='".$_SESSION['username']."'");
 		header("Location: account.php?changed=1");
 	} else if($_POST['action']=='password') {
 		$query = "SELECT salt,hash FROM users WHERE username='".$_SESSION['username']."'";

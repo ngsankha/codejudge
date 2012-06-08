@@ -8,14 +8,17 @@
         $query = "SELECT status FROM users WHERE username='".$_SESSION['username']."'";
         $result = mysql_query($query);
         $status = mysql_fetch_array($result);
-        if($accept['accept'] == 1 and $status['status'] == 1) {
+        if($accept['accept'] == 1 and $status['status'] == 1 and is_numeric($_POST['id'])) {
+        	$soln = mysql_real_escape_string($_POST['soln']);
+        	$filename = mysql_real_escape_string($_POST['filename']);
+        	$lang = mysql_real_escape_string($_POST['lang']);
 		if($_POST['ctype']=='new')
-			$query = "INSERT INTO `solve` ( `problem_id` , `username`, `soln`, `filename`, `lang`) VALUES ('".$_POST['id']."', '".$_SESSION['username']."', '".mysql_real_escape_string($_POST['soln'])."', '".mysql_real_escape_string($_POST['filename'])."', '".$_POST['lang']."')";
+			$query = "INSERT INTO `solve` ( `problem_id` , `username`, `soln`, `filename`, `lang`) VALUES ('".$_POST['id']."', '".$_SESSION['username']."', '".$soln."', '".$filename."', '".$lang."')";
 		else {
 			$tmp = "SELECT attempts FROM solve WHERE (problem_id='".$_POST['id']."' AND username='".$_SESSION['username']."')";
 			$result = mysql_query($tmp);
 			$fields = mysql_fetch_array($result);
-			$query = "UPDATE solve SET lang='".$_POST['lang']."', attempts='".($fields['attempts']+1)."', soln='".mysql_real_escape_string($_POST['soln'])."', filename='".mysql_real_escape_string($_POST['filename'])."' WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+			$query = "UPDATE solve SET lang='".$lang."', attempts='".($fields['attempts']+1)."', soln='".$soln."', filename='".$filename."' WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
 		}
 		mysql_query($query);
 		$socket = fsockopen($compilerhost, $compilerport);
@@ -28,7 +31,7 @@
 			$fields = mysql_fetch_array($result);
 			$input = str_replace("\n", '$_n_$', treat($fields['input']));
 			fwrite($socket, $input."\n");
-			fwrite($socket, $_POST['lang']."\n");
+			fwrite($socket, $lang."\n");
 			$status = fgets($socket);
 			$contents = "";
 			while(!feof($socket))

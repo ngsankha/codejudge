@@ -8,11 +8,11 @@
 			echo("<hr/>\n<h1>".$_POST['title']."</h1>\n");
 			echo($out);
 		}
-	} else if($_POST['action'] == 'code') {
+	} else if($_POST['action'] == 'code' and is_numeric($_POST['id'])) {
 		include('../functions.php');
 		connectdb();
 		echo("<hr/><h1><small>".$_POST['name']."</small></h1>\n");
-		$query = "SELECT filename, soln FROM solve WHERE (username='".$_POST['uname']."' AND problem_id='".$_POST['id']."')";
+		$query = "SELECT filename, soln FROM solve WHERE (username='".mysql_real_escape_string($_POST['uname'])."' AND problem_id='".$_POST['id']."')";
 		$result = mysql_query($query);
 		$row = mysql_fetch_array($result);
 		$str = str_replace("<", "&lt;", $row['soln']);

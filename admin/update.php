@@ -3,7 +3,7 @@
 	connectdb();
 	if(isset($_POST['action'])){
 		if($_POST['action']=='email') {
-			mysql_query("UPDATE users SET email='".$_POST['email']."' WHERE username='".$_SESSION['username']."'");
+			mysql_query("UPDATE users SET email='".mysql_real_escape_string($_POST['email'])."' WHERE username='".$_SESSION['username']."'");
 			header("Location: index.php?changed=1");
 		} else if($_POST['action']=='password') {
 			$query = "SELECT salt,hash FROM users WHERE username='admin'";
@@ -23,29 +23,29 @@
 			if($_POST['cpp']=='on') $cpp=1; else $cpp=0;
 			if($_POST['java']=='on') $java=1; else $java=0;
 			if($_POST['python']=='on') $python=1; else $python=0;
-			mysql_query("UPDATE prefs SET name='".$_POST['name']."', accept=$accept, c=$c, cpp=$cpp, java=$java, python=$python");
+			mysql_query("UPDATE prefs SET name='".mysql_real_escape_string($_POST['name'])."', accept=$accept, c=$c, cpp=$cpp, java=$java, python=$python");
 			header("Location: index.php?changed=1");
 		} else if($_POST['action']=='addproblem') {
-			$query="INSERT INTO `problems` ( `name` , `text`, `input`, `output`) VALUES ('".$_POST['title']."', '".$_POST['problem']."', '".$_POST['input']."', '".$_POST['output']."')";
+			$query="INSERT INTO `problems` ( `name` , `text`, `input`, `output`) VALUES ('".mysql_real_escape_string($_POST['title'])."', '".mysql_real_escape_string($_POST['problem'])."', '".mysql_real_escape_string($_POST['input'])."', '".mysql_real_escape_string($_POST['output'])."')";
 			mysql_query($query);
 			header("Location: problems.php?added=1");
-		} else if($_POST['action']=='editproblem') {
-			mysql_query("UPDATE problems SET input='".$_POST['input']."', output='".$_POST['output']."', name='".$_POST['title']."', text='".$_POST['problem']."'  WHERE sl='".$_POST['id']."'");
+		} else if($_POST['action']=='editproblem' and is_numeric($_POST['id'])) {
+			mysql_query("UPDATE problems SET input='".mysql_real_escape_string($_POST['input'])."', output='".mysql_real_escape_string($_POST['output'])."', name='".mysql_real_escape_string($_POST['title'])."', text='".mysql_real_escape_string($_POST['problem'])."'  WHERE sl='".$_POST['id']."'");
 			mysql_query($query);
 			header("Location: problems.php?updated=1&action=edit&id=".$_POST['id']);
 		}
 	}
 	else if(isset($_GET['action'])){
-		if($_GET['action']=='delete') {
+		if($_GET['action']=='delete' and is_numeric($_GET['id'])) {
 			$query="DELETE FROM problems WHERE sl=".$_GET['id'];
 			mysql_query($query);
 			header("Location: problems.php?deleted=1");
 		} else if($_GET['action']=='ban') {
-			$query="UPDATE users SET status=0 WHERE username='".$_GET['username']."'";
+			$query="UPDATE users SET status=0 WHERE username='".mysql_real_escape_string($_GET['username'])."'";
 			mysql_query($query);
 			header("Location: users.php?banned=1");
 		} else if($_GET['action']=='unban') {
-			$query="UPDATE users SET status=1 WHERE username='".$_GET['username']."'";
+			$query="UPDATE users SET status=1 WHERE username='".mysql_real_escape_string($_GET['username'])."'";
 			mysql_query($query);
 			header("Location: users.php?unbanned=1");
 		}
