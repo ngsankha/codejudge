@@ -10,6 +10,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import codejudge.compiler.languages.C;
+import codejudge.compiler.languages.Cpp;
+import codejudge.compiler.languages.Java;
+import codejudge.compiler.languages.Language;
+import codejudge.compiler.languages.Python;
+
 public class RequestThread extends Thread {
 	
 	Socket s;
@@ -35,57 +41,24 @@ public class RequestThread extends Thread {
 			PrintWriter writer = new PrintWriter(new FileOutputStream("stage/" + n +"/in.txt"));
 			writer.println(input);
 			writer.close();
-			if(lang.equals("c")) {
-				C c = new C(file, contents, dir.getAbsolutePath());
-				c.compile();
-				String errors = compileErrors();
-				if(errors.equals("")) {
-					c.execute();
-					String output = execMsg();
-					out.println("1");
-					out.println(output);
-				} else {
-					out.println("0");
-					out.println(errors);
-				}
-			} else if(lang.equals("cpp")) {
-				Cpp cpp = new Cpp(file, contents, dir.getAbsolutePath());
-				cpp.compile();
-				String errors = compileErrors();
-				if(errors.equals("")) {
-					cpp.execute();
-					String output = execMsg();
-					out.println("1");
-					out.println(output);
-				} else {
-					out.println("0");
-					out.println(errors);
-				}
-			} else if(lang.equals("java")) {
-				Java java = new Java(file, contents, dir.getAbsolutePath());
-				java.compile();
-				String errors = compileErrors();
-				if(errors.equals("")) {
-					java.execute();
-					String output = execMsg();
-					out.println("1");
-					out.println(output);
-				} else {
-					out.println("0");
-					out.println(errors);
-				}
-			} else if(lang.equals("python")) {
-				Python py = new Python(file, contents, dir.getAbsolutePath());
-				py.execute();
-				String errors = compileErrors();
-				if(errors.equals("")) {
-					String output = execMsg();
-					out.println("1");
-					out.println(output);
-				} else {
-					out.println("0");
-					out.println(errors);
-				}
+			Language l = null;
+			if(lang.equals("c"))
+				l = new C(file, contents, dir.getAbsolutePath());
+			else if(lang.equals("cpp"))
+				l = new Cpp(file, contents, dir.getAbsolutePath());
+			else if(lang.equals("java"))
+				l = new Java(file, contents, dir.getAbsolutePath());
+			else if(lang.equals("python"))
+				l = new Python(file, contents, dir.getAbsolutePath());
+			l.compile();
+			String errors = compileErrors();
+			if(!errors.equals("")) {
+				out.println("0");
+				out.println(errors);
+			} else {
+				l.execute();
+				out.println("1");
+				out.println(execMsg());
 			}
 			s.close();
 		} catch (IOException e) {
