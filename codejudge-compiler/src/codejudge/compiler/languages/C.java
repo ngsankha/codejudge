@@ -1,4 +1,4 @@
-package codejudge.compiler;
+package codejudge.compiler.languages;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class C {
+public class C implements Language {
 	
 	String file, contents, dir;
 	
