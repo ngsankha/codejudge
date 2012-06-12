@@ -85,7 +85,7 @@
           </div>
           </div>
           <input class="btn btn-primary btn-large" type="submit" value="Update Problem"/>
-          <input class="btn btn-large" type="button" value="Preview" onclick="$('#preview').load('preview.php', {title: $('#title').val(), text: $('#text').val()});"/>
+          <input class="btn btn-large" type="button" value="Preview" onclick="$('#preview').load('preview.php', {action: 'preview', title: $('#title').val(), text: $('#text').val()});"/>
           <input class="btn btn-danger btn-large" type="button" value="Delete Problem" onclick="window.location='update.php?action=delete&id='+$('#id').val();"/>
           </form>
           <div id="preview"></div>
