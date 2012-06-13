@@ -23,6 +23,8 @@
           echo("<div class=\"alert alert-success\">\nAccount settings updated!\n</div>");
         else if(isset($_GET['passerror']))
           echo("<div class=\"alert alert-error\">\nThe old password you entered is wrong. Please enter the correct password and try again.\n</div>");
+        else if(isset($_GET['derror']))
+          echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
     ?>
     Account settings for <?php echo($_SESSION['username']);?><hr/>
     	  <form method="post" action="update.php">

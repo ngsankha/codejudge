@@ -3,17 +3,21 @@
 	if(loggedin() and $_SESSION['username'] == 'admin')
 		header("Location: index.php");
 	else if(isset($_POST['password'])) {
-		connectdb();
-		$query = "SELECT salt,hash FROM users WHERE username='admin'";
-		$result = mysql_query($query);
-		$fields = mysql_fetch_array($result);
-		$currhash = crypt($_POST['password'], $fields['salt']);
-		if($currhash == $fields['hash']) {
-			$_SESSION['username'] = "admin";
-			header("Location: index.php");
-		} else
-			header("Location: login.php?error=1");
-	} else
+		if(trim($_POST['password']) == "")
+			header("Location: login.php?derror=1");
+		else {
+			connectdb();
+			$query = "SELECT salt,hash FROM users WHERE username='admin'";
+			$result = mysql_query($query);
+			$fields = mysql_fetch_array($result);
+			$currhash = crypt($_POST['password'], $fields['salt']);
+			if($currhash == $fields['hash']) {
+				$_SESSION['username'] = "admin";
+				header("Location: index.php");
+			} else
+				header("Location: login.php?error=1");
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en"><head>
@@ -73,6 +77,8 @@
           echo("<div class=\"alert alert-info\">\nYou have logged out successfully!\n</div>");
         else if(isset($_GET['error']))
           echo("<div class=\"alert alert-error\">\nIncorrect Password!\n</div>");
+        else if(isset($_GET['derror']))
+          echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
       ?>
       <h1><small>Login</small></h1>
       <p>Please login to use the admin panel.</p><br/>

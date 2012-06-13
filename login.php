@@ -5,29 +5,37 @@
 	else if(isset($_POST['action'])) {
 		$username = mysql_real_escape_string($_POST['username']);
 		if($_POST['action']=='login') {
-			connectdb();
-			$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
-			$result = mysql_query($query);
-			$fields = mysql_fetch_array($result);
-			$currhash = crypt($_POST['password'], $fields['salt']);
-			if($currhash == $fields['hash']) {
-				$_SESSION['username'] = $username;
-				header("Location: index.php");
-			} else
-				header("Location: login.php?error=1");
+			if(trim($username) == "" or trim($_POST['password']) == "")
+				header("Location: login.php?derror=1");
+			else {
+				connectdb();
+				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
+				$result = mysql_query($query);
+				$fields = mysql_fetch_array($result);
+				$currhash = crypt($_POST['password'], $fields['salt']);
+				if($currhash == $fields['hash']) {
+					$_SESSION['username'] = $username;
+					header("Location: index.php");
+				} else
+					header("Location: login.php?error=1");
+			}
 		} else if($_POST['action']=='register') {
 			$email = mysql_real_escape_string($_POST['email']);
-			connectdb();
-			$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
-			$result = mysql_query($query);
-			if(mysql_num_rows($result)!=0)
-				header("Location: login.php?exists=1");
+			if(trim($username) == "" or trim($_POST['password']) == "" or trim($email) == "")
+				header("Location: login.php?derror=1");
 			else {
-				$salt = randomAlphaNum(5);
-				$hash = crypt($_POST['password'], $salt);
-				$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('".$username."', '$salt', '$hash', '".$email."')";
-				mysql_query($sql);
-				header("Location: login.php?registered=1");
+				connectdb();
+				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
+				$result = mysql_query($query);
+				if(mysql_num_rows($result)!=0)
+					header("Location: login.php?exists=1");
+				else {
+					$salt = randomAlphaNum(5);
+					$hash = crypt($_POST['password'], $salt);
+					$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('".$username."', '$salt', '$hash', '".$email."')";
+					mysql_query($sql);
+					header("Location: login.php?registered=1");
+				}
 			}
 		}
 	}
@@ -94,6 +102,8 @@
           echo("<div class=\"alert alert-success\">\nYou have been registered successfully! Login to continue.\n</div>");
         else if(isset($_GET['exists']))
           echo("<div class=\"alert alert-error\">\nUser already exists! Please select a different username.\n</div>");
+        else if(isset($_GET['derror']))
+          echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
       ?>
       <h1><small>Login</small></h1>
       <p>Please login to continue.</p><br/>
