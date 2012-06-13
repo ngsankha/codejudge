@@ -27,12 +27,14 @@
       </tr></thead>
       <tbody>
       <?php
-        $query = "SELECT username FROM users WHERE username!='admin'";
+        $query = "SELECT username, status FROM users WHERE username!='admin'";
         $result = mysql_query($query);
        	while($row = mysql_fetch_array($result)) {
        		$sql = "SELECT * FROM solve WHERE (status='2' AND username='".$row['username']."')";
        		$res = mysql_query($sql);
-       		echo("<tr><td>".$row['username']."</td><td><span class=\"badge badge-success\">".mysql_num_rows($res));
+       		echo("<tr><td>".$row['username']." ");
+       		if($row['status'] == 0) echo("</a> <span class=\"label label-important\">Banned</span>");
+       		echo("</td><td><span class=\"badge badge-success\">".mysql_num_rows($res));
        		$sql = "SELECT * FROM solve WHERE (status='1' AND username='".$row['username']."')";
        		$res = mysql_query($sql);
        		echo("</span></td><td><span class=\"badge badge-warning\">".mysql_num_rows($res)."</span></td></tr>");
