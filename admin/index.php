@@ -24,6 +24,8 @@
           echo("<div class=\"alert alert-success\">\nSettings Saved!\n</div>");
         else if(isset($_GET['passerror']))
           echo("<div class=\"alert alert-error\">\nThe old password is incorrect!\n</div>");
+        else if(isset($_GET['derror']))
+          echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
       ?>
       <ul class="nav nav-tabs">
         <li class="active"><a href="#">General</a></li>

@@ -25,6 +25,8 @@
           echo("<div class=\"alert alert-error\">\nProblem deleted!\n</div>");
         else if(isset($_GET['updated']))
           echo("<div class=\"alert alert-success\">\nProblem updated!\n</div>");
+        else if(isset($_GET['derror']))
+          echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
       ?>
       <ul class="nav nav-tabs">
         <li><a href="index.php">General</a></li>
