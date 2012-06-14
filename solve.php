@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Solution submission page
+ */
 	require_once('functions.php');
 	if(!loggedin())
 		header("Location: login.php");
@@ -43,6 +50,7 @@
       ?>
     <h1><small>Submit Solution</small></h1>
       <?php
+        // display the problem statement
       	if(isset($_GET['id']) and is_numeric($_GET['id'])) {
       		$query = "SELECT * FROM problems WHERE sl='".$_GET['id']."'";
           	$result = mysql_query($query);
@@ -54,6 +62,7 @@
       ?>
       <hr/>
       <?php
+        // get the peviously submitted solution if exists
         if(is_numeric($_GET['id'])) {
           $query = "SELECT * FROM solve WHERE (problem_id='".$_GET['id']."' AND username='".$_SESSION['username']."')";
           $result = mysql_query($query);

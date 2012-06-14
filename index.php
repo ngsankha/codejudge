@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * The main page that lists all the problem
+ */
 	require_once('functions.php');
 	if(!loggedin())
 		header("Location: login.php");
@@ -26,15 +33,17 @@
       <ul class="nav nav-list">
         <li class="nav-header">AVAILABLE PROBLEMS</li>
         <?php
+        	// list all the problems from the database
         	$query = "SELECT * FROM problems";
           	$result = mysql_query($query);
           	if(mysql_num_rows($result)==0)
-			echo("<li>None</li>\n");
+			echo("<li>None</li>\n"); // no problems are there
 		else {
 			while($row = mysql_fetch_array($result)) {
 				$sql = "SELECT status FROM solve WHERE (username='".$_SESSION['username']."' AND problem_id='".$row['sl']."')";
 				$res = mysql_query($sql);
-				$tag="";
+				$tag = "";
+				// decide the attempted or solve tag
 				if(mysql_num_rows($res) !== 0) {
 					$r = mysql_fetch_array($res);
 					if($r['status'] == 1)
@@ -52,6 +61,7 @@
 	?>
       </ul>
       <?php
+        // if any problem is selected then list its details parsed by Markdown
       	if(isset($_GET['id'])) {
       		include('markdown.php');
 		$out = Markdown($selected['text']);
@@ -62,6 +72,7 @@
       <form action="solve.php" method="get">
       <input type="hidden" name="id" value="<?php echo($selected['sl']);?>"/>
       <?php
+        // number of people who have solved the problem
         $query = "SELECT * FROM solve WHERE(status=2 AND problem_id='".$selected['sl']."')";
         $result = mysql_query($query);
         $num = mysql_num_rows($result);

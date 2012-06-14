@@ -1,6 +1,14 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Installation PHP Script
+ */
 	require_once('functions.php');
 	if(isset($_POST['host'])) {
+		// create file 'dbinfo.php'
 		$fp = fopen('dbinfo.php','w');
 		$l1 = '$host="'.$_POST['host'].'";';
 		$l2 = '$user="'.$_POST['username'].'";';
@@ -11,9 +19,12 @@
 		fwrite($fp, "<?php\n$l1\n$l2\n$l3\n$l4\n$l5\n$l6\n?>");
 		fclose($fp);
 		include('dbinfo.php');
+		// connect to the MySQL server
 		mysql_connect($host,$user,$password);
+		// create the database
 		mysql_query("CREATE DATABASE $database");
 		mysql_select_db($database) or die('Error connecting to database.');
+		// create the preferences table
 		mysql_query("CREATE TABLE `prefs` (
   `name` varchar(30) NOT NULL,
   `accept` int(11) NOT NULL,
@@ -22,8 +33,10 @@
   `java` int(11) NOT NULL,
   `python` int(11) NOT NULL
 )");
+		// fill it with default preferences
 		mysql_query("INSERT INTO `prefs` (`name`, `accept`, `c`, `cpp`, `java`, `python`) VALUES
 ('Codejudge', 1, 1, 1, 1, 1)");
+		// create the problems table
 		mysql_query("CREATE TABLE IF NOT EXISTS `problems` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
@@ -32,6 +45,7 @@
   `output` text NOT NULL,
   PRIMARY KEY (`sl`)
 )");
+		// create the solve table
 		mysql_query("CREATE TABLE IF NOT EXISTS `solve` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
   `problem_id` int(11) NOT NULL,
@@ -43,6 +57,7 @@
   `lang` varchar(20) NOT NULL,
   PRIMARY KEY (`sl`)
 )");
+		// create the users table
 		mysql_query("CREATE TABLE IF NOT EXISTS `users` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(25) NOT NULL,
@@ -52,6 +67,7 @@
   `status` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`sl`)
 )");
+		// create the user 'admin' with password 'admin'
 		$salt=randomAlphaNum(5);
 		$pass="admin";
 		$hash=crypt($pass,$salt);

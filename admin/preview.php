@@ -1,5 +1,13 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * PHP script that returns for AJAX requests
+ */
 	if($_POST['action'] == 'preview') {
+		// preview for the markdown problem statement
 		if($_POST['title']=="" and $_POST['text']=="")
 			echo("<div class=\"alert alert-error\">You have not entered either the title or the problem text!</div>");
 		else {
@@ -9,6 +17,7 @@
 			echo($out);
 		}
 	} else if($_POST['action'] == 'code' and is_numeric($_POST['id'])) {
+		// formatting for codes
 		include('../functions.php');
 		connectdb();
 		echo("<hr/><h1><small>".$_POST['name']."</small></h1>\n");

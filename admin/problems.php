@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Problems adding or editing page
+ */
 	require_once('../functions.php');
 	if(!loggedin())
 		header("Location: login.php");
@@ -38,6 +45,7 @@
           <ul class="nav nav-list">
             <li class="nav-header">ADDED PROBLEMS</li>
             	<?php
+            	  // list all the problems
             	  $query = "SELECT * FROM problems";
           	  $result = mysql_query($query);
           	  if(mysql_num_rows($result)==0)
@@ -63,6 +71,7 @@
           <hr/>
           <?php
             if(isset($_GET['action']) and $_GET['action']=='edit') {
+              // edit a selected problem
           ?>
           <h1><small>Edit a Problem</small></h1>
           <form method="post" action="update.php">
@@ -91,7 +100,8 @@
           <input class="btn btn-danger btn-large" type="button" value="Delete Problem" onclick="window.location='update.php?action=delete&id='+$('#id').val();"/>
           </form>
           <div id="preview"></div>
-          <?php }else {?>
+          <?php }else { // add a problem
+          ?>
           <h1><small>Add a Problem</small></h1>
           <form method="post" action="update.php">
           <input type="hidden" name="action" value="addproblem"/>

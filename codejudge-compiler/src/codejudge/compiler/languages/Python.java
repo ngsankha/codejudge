@@ -1,3 +1,11 @@
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Codejudge Compiler Server: Compiler for the Python language
+ */
+
 package codejudge.compiler.languages;
 
 import java.io.BufferedWriter;
@@ -21,6 +29,7 @@ public class Python implements Language {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dir + "/" + file)));
 			out.write(contents);
 			out.close();
+			// create the execution script
 			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dir + "/run.sh")));
 			out.write("cd \"" + dir +"\"\n");
 			out.write("python " + file + "< in.txt > out.txt 2>err.txt");
@@ -28,7 +37,7 @@ public class Python implements Language {
 			Runtime r = Runtime.getRuntime();
 			Process p = r.exec("chmod +x " + dir + "/run.sh");
 			p.waitFor();
-			p = r.exec(dir + "/run.sh");
+			p = r.exec(dir + "/run.sh"); // execute the script
 			p.waitFor();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -39,5 +48,7 @@ public class Python implements Language {
 		}
 	}
 
-	public void execute() {}
+	public void execute() {
+		// nothing to be done here
+	}
 }

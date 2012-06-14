@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Codejudge Login page
+ */
 	require_once('functions.php');
 	if(loggedin())
 		header("Location: index.php");
@@ -6,8 +13,9 @@
 		$username = mysql_real_escape_string($_POST['username']);
 		if($_POST['action']=='login') {
 			if(trim($username) == "" or trim($_POST['password']) == "")
-				header("Location: login.php?derror=1");
+				header("Location: login.php?derror=1"); // empty entry
 			else {
+				// code to login the user and start a session
 				connectdb();
 				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
 				$result = mysql_query($query);
@@ -20,10 +28,12 @@
 					header("Location: login.php?error=1");
 			}
 		} else if($_POST['action']=='register') {
+			// register the user
 			$email = mysql_real_escape_string($_POST['email']);
 			if(trim($username) == "" or trim($_POST['password']) == "" or trim($email) == "")
-				header("Location: login.php?derror=1");
+				header("Location: login.php?derror=1"); // empty entry
 			else {
+				// create the entry in the users table
 				connectdb();
 				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
 				$result = mysql_query($query);
