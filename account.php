@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Account Settings page
+ */
 	require_once('functions.php');
 	if(!loggedin())
 		header("Location: login.php");

@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Profileof the users
+ */
 	require_once('../functions.php');
 	if(!loggedin())
 		header("Location: login.php");
@@ -19,6 +26,7 @@
 
     <div class="container">
     <?php
+      // get the name, email and status
       $query = "SELECT email, status FROM users WHERE username='".$_GET['uname']."'";
       $result = mysql_query($query);
       $row = mysql_fetch_array($result);
@@ -35,6 +43,7 @@
       </tr></thead>
       <tbody>
       <?php
+        // list all the problems attempted or solved
         $query = "SELECT problem_id, status, attempts FROM solve WHERE username='".$_GET['uname']."'";
         $result = mysql_query($query);
        	while($row = mysql_fetch_array($result)) {

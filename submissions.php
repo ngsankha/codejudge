@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Submissions List page
+ */
 	require_once('functions.php');
 	if(!loggedin())
 		header("Location: login.php");
@@ -27,6 +34,7 @@
       </tr></thead>
       <tbody>
       <?php
+        // list all the submissions made by the user
         $query = "SELECT problem_id, status, attempts FROM solve WHERE username='".$_SESSION['username']."'";
         $result = mysql_query($query);
        	while($row = mysql_fetch_array($result)) {

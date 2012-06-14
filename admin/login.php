@@ -1,11 +1,19 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Codejudge Admin Login page
+ */
 	require_once('../functions.php');
 	if(loggedin() and $_SESSION['username'] == 'admin')
 		header("Location: index.php");
 	else if(isset($_POST['password'])) {
 		if(trim($_POST['password']) == "")
-			header("Location: login.php?derror=1");
+			header("Location: login.php?derror=1"); // empty entry
 		else {
+			// code to login the user and start a session
 			connectdb();
 			$query = "SELECT salt,hash FROM users WHERE username='admin'";
 			$result = mysql_query($query);

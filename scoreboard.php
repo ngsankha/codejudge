@@ -1,4 +1,11 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Scoreboard page
+ */
 	require_once('functions.php');
 	if(!loggedin())
 		header("Location: login.php");
@@ -30,6 +37,7 @@
         $query = "SELECT username, status FROM users WHERE username!='admin'";
         $result = mysql_query($query);
        	while($row = mysql_fetch_array($result)) {
+       		// displays the user, problems solved and attempted
        		$sql = "SELECT * FROM solve WHERE (status='2' AND username='".$row['username']."')";
        		$res = mysql_query($sql);
        		echo("<tr><td>".$row['username']." ");

@@ -1,3 +1,11 @@
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * Codejudge Compiler Server: Compiler for the C++ language
+ */
+
 package codejudge.compiler.languages;
 
 import java.io.BufferedWriter;
@@ -20,6 +28,7 @@ public class Cpp implements Language {
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dir + "/" + file)));
 			out.write(contents);
 			out.close();
+			// create the compiler script
 			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dir + "/compile.sh")));
 			out.write("cd \"" + dir +"\"\n");
 			out.write("g++ -lm " + file + " 2> err.txt");
@@ -27,7 +36,7 @@ public class Cpp implements Language {
 			Runtime r = Runtime.getRuntime();
 			Process p = r.exec("chmod +x " + dir + "/compile.sh");
 			p.waitFor();
-			p = r.exec(dir + "/compile.sh");
+			p = r.exec(dir + "/compile.sh"); // execute the compiler script
 			p.waitFor();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -40,6 +49,7 @@ public class Cpp implements Language {
 	
 	public void execute() {
 		try {
+			// create the execution script
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dir + "/run.sh")));
 			out.write("cd \"" + dir +"\"\n");
 			out.write("./a.out < in.txt > out.txt");
@@ -47,7 +57,7 @@ public class Cpp implements Language {
 			Runtime r = Runtime.getRuntime();
 			Process p = r.exec("chmod +x " + dir + "/run.sh");
 			p.waitFor();
-			p = r.exec(dir + "/run.sh");
+			p = r.exec(dir + "/run.sh"); // execute the script
 			p.waitFor();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

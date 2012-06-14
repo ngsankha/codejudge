@@ -1,8 +1,16 @@
 <?php
+/*
+ * Codejudge
+ * Copyright 2012, Sankha Narayan Guria (sankha93@gmail.com)
+ * Licensed under MIT License.
+ *
+ * script that performs some database operations
+ */
 	include('../functions.php');
 	connectdb();
 	if(isset($_POST['action'])){
 		if($_POST['action']=='email') {
+			// update the admin email
 			if(trim($_POST['email']) == "")
 				header("Location: index.php?derror=1");
 			else {
@@ -10,6 +18,7 @@
 				header("Location: index.php?changed=1");
 			}
 		} else if($_POST['action']=='password') {
+			// update the admin password
 			if(trim($_POST['oldpass']) == "" or trim($_POST['newpass']) == "")
 				header("Location: index.php?derror=1");
 			else {
@@ -26,6 +35,7 @@
 					header("Location: index.php?passerror=1");
 			}
 		} else if($_POST['action']=='settings') {
+			// update the event settings
 			if(trim($_POST['name']) == "")
 				header("Location: index.php?derror=1");
 			else {
@@ -38,6 +48,7 @@
 				header("Location: index.php?changed=1");
 			}
 		} else if($_POST['action']=='addproblem') {
+			// add a problem
 			if(trim($_POST['title']) == "" or trim($_POST['problem']) == "")
 				header("Location: problems.php?derror=1");
 			else {
@@ -46,6 +57,7 @@
 				header("Location: problems.php?added=1");
 			}
 		} else if($_POST['action']=='editproblem' and is_numeric($_POST['id'])) {
+			// update an already existing problem
 			if(trim($_POST['title']) == "" or trim($_POST['problem']) == "")
 				header("Location: problems.php?derror=1&action=edit&id=".$_POST['id']);
 			else {
@@ -57,14 +69,17 @@
 	}
 	else if(isset($_GET['action'])){
 		if($_GET['action']=='delete' and is_numeric($_GET['id'])) {
+			// delete an existing problem
 			$query="DELETE FROM problems WHERE sl=".$_GET['id'];
 			mysql_query($query);
 			header("Location: problems.php?deleted=1");
 		} else if($_GET['action']=='ban') {
+			// ban a user from the event
 			$query="UPDATE users SET status=0 WHERE username='".mysql_real_escape_string($_GET['username'])."'";
 			mysql_query($query);
 			header("Location: users.php?banned=1");
 		} else if($_GET['action']=='unban') {
+			// unban a user from the event
 			$query="UPDATE users SET status=1 WHERE username='".mysql_real_escape_string($_GET['username'])."'";
 			mysql_query($query);
 			header("Location: users.php?unbanned=1");
