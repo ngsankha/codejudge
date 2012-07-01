@@ -32,6 +32,7 @@ public class Python implements Language {
 			// create the execution script
 			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dir + "/run.sh")));
 			out.write("cd \"" + dir +"\"\n");
+			out.write("chroot .\n");
 			out.write("python " + file + "< in.txt > out.txt 2>err.txt");
 			out.close();
 			Runtime r = Runtime.getRuntime();

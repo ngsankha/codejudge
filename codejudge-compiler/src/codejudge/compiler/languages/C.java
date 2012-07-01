@@ -52,6 +52,7 @@ public class C implements Language {
 			// create the execution script
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dir + "/run.sh")));
 			out.write("cd \"" + dir +"\"\n");
+			out.write("chroot .\n");
 			out.write("./a.out < in.txt > out.txt");
 			out.close();
 			Runtime r = Runtime.getRuntime();
