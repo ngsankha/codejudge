@@ -97,9 +97,9 @@
         </ul>
       </div>
       <br/>
-      Filename: <input style="width:725px;" type="text" id="filename" name="filename" value="<?php if(!($num == 0)) echo($fields['filename']);?>"/>
+      Filename: <input class="span8" type="text" id="filename" name="filename" value="<?php if(!($num == 0)) echo($fields['filename']);?>"/>
       <br/>Type your program below:<br/><br/>
-      <textarea style="font-family: mono; width:785px; height:400px;" name="soln" id="text"><?php if(!($num == 0)) echo($fields['soln']);?></textarea><br/>
+      <textarea style="font-family: mono; height:400px;" class="span9" name="soln" id="text"><?php if(!($num == 0)) echo($fields['soln']);?></textarea><br/>
       <?php if($accept['accept'] == 1 and $status['status'] == 1) echo("<input type=\"submit\" value=\"Run\" class=\"btn btn-primary btn-large\"/>");
             else echo("<input type=\"submit\" value=\"Run\" class=\"btn disabled btn-large\" disabled=\"disabled\"/>");
       ?>

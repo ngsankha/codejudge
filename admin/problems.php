@@ -112,15 +112,15 @@
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab1">
-          Problem Title: <input style="width:700px;" type="text" id="title" name="title"/><br/>
+          Problem Title: <input class="span8" type="text" id="title" name="title"/><br/>
           Detailed problem: <span class="label label-info">Markdown formatting supported</span></br/><br/>
-          <textarea style="width:785px; height:400px;" name="problem" id="text"></textarea><br/>
+          <textarea style="height:400px;" class="span9" name="problem" id="text"></textarea><br/>
           </div>
           <div class="tab-pane" id="tab2">
-          <textarea style="font-family: mono; width:785px; height:400px;" name="input" id="input"></textarea><br/>
+          <textarea style="font-family: mono; height:400px;" class="span9" name="input" id="input"></textarea><br/>
           </div>
           <div class="tab-pane" id="tab3">
-          <textarea style="font-family: mono; width:785px; height:400px;" name="output" id="output"></textarea><br/>
+          <textarea style="font-family: mono; height:400px;" class="span9" name="output" id="output"></textarea><br/>
           </div>
           </div>
           <input class="btn btn-primary btn-large" type="submit" value="Add Problem"/>
