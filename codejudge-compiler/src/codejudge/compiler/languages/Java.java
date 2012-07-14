@@ -14,12 +14,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class Java implements Language {
+import codejudge.compiler.TimedShell;
+
+public class Java extends Language {
 	
 	String file, contents, dir;
+	int timeout;
 	
-	public Java(String file, String contents, String dir) {
+	public Java(String file, int timeout, String contents, String dir) {
 		this.file = file;
+		this.timeout = timeout;
 		this.contents = contents;
 		this.dir = dir;
 	}
@@ -59,6 +63,8 @@ public class Java implements Language {
 			Process p = r.exec("chmod +x " + dir + "/run.sh");
 			p.waitFor();
 			p = r.exec(dir + "/run.sh"); // execute the script
+			TimedShell shell = new TimedShell(this, p, 3000);
+			shell.start();
 			p.waitFor();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

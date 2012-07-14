@@ -43,6 +43,7 @@ public class RequestThread extends Thread {
 			PrintWriter out = new PrintWriter(s.getOutputStream(), true);
 			// read input from the PHP script
 			String file = in.readLine();
+			int timeout = Integer.parseInt(in.readLine());
 			String contents = in.readLine().replace("$_n_$", "\n");
 			String input = in.readLine().replace("$_n_$", "\n");
 			String lang = in.readLine();
@@ -54,13 +55,13 @@ public class RequestThread extends Thread {
 			Language l = null;
 			// create the language specific compiler
 			if(lang.equals("c"))
-				l = new C(file, contents, dir.getAbsolutePath());
+				l = new C(file, timeout, contents, dir.getAbsolutePath());
 			else if(lang.equals("cpp"))
-				l = new Cpp(file, contents, dir.getAbsolutePath());
+				l = new Cpp(file, timeout, contents, dir.getAbsolutePath());
 			else if(lang.equals("java"))
-				l = new Java(file, contents, dir.getAbsolutePath());
+				l = new Java(file, timeout, contents, dir.getAbsolutePath());
 			else if(lang.equals("python"))
-				l = new Python(file, contents, dir.getAbsolutePath());
+				l = new Python(file, timeout, contents, dir.getAbsolutePath());
 			l.compile(); // compile the file
 			String errors = compileErrors();
 			if(!errors.equals("")) { // check for compilation errors

@@ -14,12 +14,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class C implements Language {
+import codejudge.compiler.TimedShell;
+
+public class C extends Language {
 	
 	String file, contents, dir;
+	int timeout;
 	
-	public C(String file, String contents, String dir) {
+	public C(String file, int timeout, String contents, String dir) {
 		this.file = file;
+		this.timeout = timeout;
 		this.contents = contents;
 		this.dir = dir;
 	}
@@ -37,6 +41,8 @@ public class C implements Language {
 			Process p = r.exec("chmod +x " + dir + "/compile.sh");
 			p.waitFor();
 			p = r.exec(dir + "/compile.sh"); // execute the compiler script
+			TimedShell shell = new TimedShell(this, p, timeout);
+			shell.start();
 			p.waitFor();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -59,7 +65,9 @@ public class C implements Language {
 			Process p = r.exec("chmod +x " + dir + "/run.sh");
 			p.waitFor();
 			p = r.exec(dir + "/run.sh"); // execute the script
-			p.waitFor();
+			TimedShell shell = new TimedShell(this, p, 3000);
+			shell.start();
+			p.waitFor();			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
