@@ -67,7 +67,9 @@ public class RequestThread extends Thread {
 			if(!errors.equals("")) { // check for compilation errors
 				out.println("0");
 				out.println(errors);
-			} else {
+			} else if(l.timedout)
+				out.println("2");
+			else {
 				// execute the program and return output
 				l.execute();
 				out.println("1");
