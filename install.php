@@ -43,6 +43,7 @@
   `text` text NOT NULL,
   `input` text NOT NULL,
   `output` text NOT NULL,
+  `time` int(11) NOT NULL DEFAULT '3000',
   PRIMARY KEY (`sl`)
 )");
 		// create the solve table
