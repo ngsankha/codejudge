@@ -85,6 +85,12 @@
           <div class="tab-content">
             <div class="tab-pane active" id="tab1">
           Problem Title: <input style="width:700px;" type="text" id="title" name="title" value="<?php echo($selected['name']);?>"/><br/>
+          <div class="controls">
+            <div class="input-append">
+              Time Limit: <input class="span2" id="appendedInput" size="8" type="text" name="time" value="<?php echo($selected['time']); ?>"><span class="add-on">ms</span>
+            </div>
+          </div>
+          <br/>
           Detailed problem: <span class="label label-info">Markdown formatting supported</span></br/><br/>
           <textarea style="width:785px; height:400px;" name="problem" id="text"><?php echo($selected['text']);?></textarea><br/>
           </div>
@@ -113,6 +119,12 @@
           <div class="tab-content">
             <div class="tab-pane active" id="tab1">
           Problem Title: <input class="span8" type="text" id="title" name="title"/><br/>
+          <div class="controls">
+            <div class="input-append">
+              Time Limit: <input class="span2" id="appendedInput" size="8" type="text" name="time"><span class="add-on">ms</span>
+            </div>
+          </div>
+          <br/>
           Detailed problem: <span class="label label-info">Markdown formatting supported</span></br/><br/>
           <textarea style="height:400px;" class="span9" name="problem" id="text"></textarea><br/>
           </div>

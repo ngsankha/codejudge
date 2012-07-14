@@ -49,19 +49,19 @@
 			}
 		} else if($_POST['action']=='addproblem') {
 			// add a problem
-			if(trim($_POST['title']) == "" or trim($_POST['problem']) == "")
+			if(trim($_POST['title']) == "" or trim($_POST['problem']) == "" or !is_numeric($_POST['time']))
 				header("Location: problems.php?derror=1");
 			else {
-				$query="INSERT INTO `problems` ( `name` , `text`, `input`, `output`) VALUES ('".mysql_real_escape_string($_POST['title'])."', '".mysql_real_escape_string($_POST['problem'])."', '".mysql_real_escape_string($_POST['input'])."', '".mysql_real_escape_string($_POST['output'])."')";
+				$query="INSERT INTO `problems` ( `name` , `text`, `input`, `output`, `time`) VALUES ('".mysql_real_escape_string($_POST['title'])."', '".mysql_real_escape_string($_POST['problem'])."', '".mysql_real_escape_string($_POST['input'])."', '".mysql_real_escape_string($_POST['output'])."', '".$_POST['time']."')";
 				mysql_query($query);
 				header("Location: problems.php?added=1");
 			}
 		} else if($_POST['action']=='editproblem' and is_numeric($_POST['id'])) {
 			// update an already existing problem
-			if(trim($_POST['title']) == "" or trim($_POST['problem']) == "")
+			if(trim($_POST['title']) == "" or trim($_POST['problem']) == "" or !is_numeric($_POST['time']))
 				header("Location: problems.php?derror=1&action=edit&id=".$_POST['id']);
 			else {
-				mysql_query("UPDATE problems SET input='".mysql_real_escape_string($_POST['input'])."', output='".mysql_real_escape_string($_POST['output'])."', name='".mysql_real_escape_string($_POST['title'])."', text='".mysql_real_escape_string($_POST['problem'])."'  WHERE sl='".$_POST['id']."'");
+				$query = "UPDATE problems SET input='".mysql_real_escape_string($_POST['input'])."', output='".mysql_real_escape_string($_POST['output'])."', name='".mysql_real_escape_string($_POST['title'])."', text='".mysql_real_escape_string($_POST['problem'])."', time='".$_POST['time']."' WHERE sl='".$_POST['id']."'";
 				mysql_query($query);
 				header("Location: problems.php?updated=1&action=edit&id=".$_POST['id']);
 			}
