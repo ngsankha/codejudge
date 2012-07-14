@@ -70,8 +70,12 @@ public class RequestThread extends Thread {
 			} else {
 				// execute the program and return output
 				l.execute();
-				out.println("1");
-				out.println(execMsg());
+				if(l.timedout)
+					out.println(2);
+				else {
+					out.println("1");
+					out.println(execMsg());
+				}
 			}
 			s.close();
 		} catch (IOException e) {
