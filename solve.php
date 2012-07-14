@@ -26,6 +26,8 @@
 
     <div class="container">
     <?php
+    	if(isset($_GET['terror']))
+          echo("<div class=\"alert alert-warning\">\nYour program exceeded the time limit. Maybe you should improve your algorithm.\n</div>");
         if(isset($_GET['cerror']))
           echo("<div class=\"alert alert-error\">\n<strong>The following errors occured:</strong><br/>\n<pre>\n".$_SESSION['cerror']."\n</pre>\n</div>");
         else if(isset($_GET['oerror']))

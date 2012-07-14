@@ -70,6 +70,10 @@
 						mysql_query($query);
 						header("Location: solve.php?oerror=1&id=".$_POST['id']);
 					}
+				} else if($status == 2) {
+					$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+					mysql_query($query);
+					header("Location: solve.php?terror=1&id=".$_POST['id']);
 				}
 			} else
 				header("Location: solve.php?serror=1&id=".$_POST['id']); // compiler server not running
