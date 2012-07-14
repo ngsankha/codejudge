@@ -39,11 +39,12 @@
 			$socket = fsockopen($compilerhost, $compilerport);
 			if($socket) {
 				fwrite($socket, $_POST['filename']."\n");
-				$soln = str_replace("\n", '$_n_$', treat($_POST['soln']));
-				fwrite($socket, $soln."\n");
-				$query = "SELECT input, output FROM problems WHERE sl='".$_POST['id']."'";
+				$query = "SELECT time, input, output FROM problems WHERE sl='".$_POST['id']."'";
 				$result = mysql_query($query);
 				$fields = mysql_fetch_array($result);
+				fwrite($socket, $fields['time']."\n");
+				$soln = str_replace("\n", '$_n_$', treat($_POST['soln']));
+				fwrite($socket, $soln."\n");
 				$input = str_replace("\n", '$_n_$', treat($fields['input']));
 				fwrite($socket, $input."\n");
 				fwrite($socket, $lang."\n");
