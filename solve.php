@@ -60,6 +60,7 @@
 		echo("<hr/>\n<h1>".$row['name']."</h1>\n");
 		echo($out);
       ?>
+      <br/><span class="label label-info">Time Limit: <?php echo($row['time']/1000); ?> seconds</span>
       <hr/>
       <?php
         // get the peviously submitted solution if exists
