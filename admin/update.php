@@ -72,6 +72,8 @@
 			// delete an existing problem
 			$query="DELETE FROM problems WHERE sl=".$_GET['id'];
 			mysql_query($query);
+			$query="DELETE FROM solve WHERE problem_id=".$_GET['id'];
+			mysql_query($query);
 			header("Location: problems.php?deleted=1");
 		} else if($_GET['action']=='ban') {
 			// ban a user from the event
