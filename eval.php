@@ -15,8 +15,10 @@
         $query = "SELECT status FROM users WHERE username='".$_SESSION['username']."'";
         $result = mysql_query($query);
         $status = mysql_fetch_array($result);
+	if (!preg_match("/^[^\\/?* :;{}\\\\]+\\.[^\\/?*: ;{}\\\\]{1,4}$/", $_POST['filename']))
+		header("Location: solve.php?ferror=1&id=".$_POST['id']); // invalid filename
         // check if the user is banned or allowed to submit and SQL Injection checks
-        if($accept['accept'] == 1 and $status['status'] == 1 and is_numeric($_POST['id'])) {
+        else if($accept['accept'] == 1 and $status['status'] == 1 and is_numeric($_POST['id'])) {
         	$soln = mysql_real_escape_string($_POST['soln']);
         	$filename = mysql_real_escape_string($_POST['filename']);
         	$lang = mysql_real_escape_string($_POST['lang']);
