@@ -38,6 +38,8 @@
           echo("<div class=\"alert alert-error\">\nCould not connect to the compiler server. Please contact the admin to solve the problem.\n</div>");
         else if(isset($_GET['derror']))
           echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
+        else if(isset($_GET['ferror']))
+          echo("<div class=\"alert alert-error\">\nPlease enter a legal filename.\n</div>");
           
         $query = "SELECT * FROM prefs";
         $result = mysql_query($query);
