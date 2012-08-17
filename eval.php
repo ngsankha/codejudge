@@ -51,7 +51,7 @@
 				$status = fgets($socket);
 				$contents = "";
 				while(!feof($socket))
-					$contents = $contents."\n".fgets($socket);
+					$contents = $contents.fgets($socket);
 				if($status == 0) {
 					// oops! compile error
 					$query = "UPDATE solve SET status=1 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
