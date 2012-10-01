@@ -37,6 +37,7 @@
       <ul class="nav nav-tabs">
         <li class="active"><a href="#">General</a></li>
         <li><a href="problems.php">Problems</a></li>
+        <li><a href="scoring.php">Scoring</a></li>
       </ul>
       <div>
         <div>
