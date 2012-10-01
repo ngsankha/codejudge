@@ -35,9 +35,9 @@
           echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
       ?>
       <ul class="nav nav-tabs">
-        <li><a href="#">General</a></li>
+        <li><a href="index.php">General</a></li>
         <li><a href="problems.php">Problems</a></li>
-        <li class="active"><a href="scoring.php">Scoring</a></li>
+        <li class="active"><a href="#">Scoring</a></li>
       </ul>
       <div>
         <div>
