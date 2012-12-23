@@ -59,6 +59,7 @@
   `filename` varchar(25) NOT NULL,
   `lang` varchar(20) NOT NULL,
   `score` float NOT NULL,
+  `time` bigint(20) NOT NULL,
   PRIMARY KEY (`sl`)
 )");
 		// create the users table
