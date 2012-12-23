@@ -65,6 +65,12 @@
 				mysql_query($query);
 				header("Location: problems.php?updated=1&action=edit&id=".$_POST['id']);
 			}
+		} else if($_POST['action']=='updateformula') {
+			mysql_query("UPDATE prefs SET formula='".$_POST['formula']."'");
+			$fp = fopen('formula.php','w');
+			fwrite($fp, "<?php\n".$_POST['formula']."\n?>");
+			fclose($fp);
+			header("Location: scoring.php?updated=1");
 		}
 	}
 	else if(isset($_GET['action'])){
@@ -86,5 +92,5 @@
 			mysql_query($query);
 			header("Location: users.php?unbanned=1");
 		}
-	}	
+	}
 ?>

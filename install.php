@@ -25,17 +25,18 @@
 		mysql_query("CREATE DATABASE $database");
 		mysql_select_db($database) or die('Error connecting to database.');
 		// create the preferences table
-		mysql_query("CREATE TABLE `prefs` (
+		mysql_query("CREATE TABLE IF NOT EXISTS `prefs` (
   `name` varchar(30) NOT NULL,
   `accept` int(11) NOT NULL,
   `c` int(11) NOT NULL,
   `cpp` int(11) NOT NULL,
   `java` int(11) NOT NULL,
-  `python` int(11) NOT NULL
+  `python` int(11) NOT NULL,
+  `formula` text NOT NULL
 )");
 		// fill it with default preferences
-		mysql_query("INSERT INTO `prefs` (`name`, `accept`, `c`, `cpp`, `java`, `python`) VALUES
-('Codejudge', 1, 1, 1, 1, 1)");
+		mysql_query("INSERT INTO `prefs` (`name`, `accept`, `c`, `cpp`, `java`, `python`, `forumla`) VALUES
+('Codejudge', 1, 1, 1, 1, 1,'\$score = \$points / \$attempts')");
 		// create the problems table
 		mysql_query("CREATE TABLE IF NOT EXISTS `problems` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
@@ -44,6 +45,7 @@
   `input` text NOT NULL,
   `output` text NOT NULL,
   `time` int(11) NOT NULL DEFAULT '3000',
+  `points` int(11) NOT NULL,
   PRIMARY KEY (`sl`)
 )");
 		// create the solve table
@@ -56,6 +58,7 @@
   `soln` text NOT NULL,
   `filename` varchar(25) NOT NULL,
   `lang` varchar(20) NOT NULL,
+  `score` float NOT NULL,
   PRIMARY KEY (`sl`)
 )");
 		// create the users table
@@ -66,6 +69,7 @@
   `hash` varchar(80) NOT NULL,
   `email` varchar(100) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '1',
+  `score` float NOT NULL,
   PRIMARY KEY (`sl`)
 )");
 		// create the user 'admin' with password 'admin'
