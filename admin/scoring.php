@@ -27,12 +27,8 @@
     <div class="container">
     
       <?php
-        if(isset($_GET['changed']))
-          echo("<div class=\"alert alert-success\">\nSettings Saved!\n</div>");
-        else if(isset($_GET['passerror']))
-          echo("<div class=\"alert alert-error\">\nThe old password is incorrect!\n</div>");
-        else if(isset($_GET['derror']))
-          echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
+        if(isset($_GET['updated']))
+          echo("<div class=\"alert alert-success\">\nScoring Formula Updated!\n</div>");
       ?>
       <ul class="nav nav-tabs">
         <li><a href="index.php">General</a></li>
@@ -43,10 +39,19 @@
         <div>
           Type out the score calculation method for each of the problems. The total score of the user will be calculated as a sum of individual scores for the problems by using the same formula on all the solved or attempted problems.<br/><br/>
           <b>You can use any of the following variables in your calculation:</b><br/>
-          <code>$attempts</code> The number of attempts by the user for that problem.<br/><br/>
-
+          <code>$attempts</code> The number of attempts by the user for that problem.<br/>
+          <code>$points</code> Maximum points alloted for that question.<br/>
+          <code>$score</code> Score to be awarded for that problem.<br/>
+          <span class="label label-info">The formula uses PHP styled syntax. Make sure you end each statement with a ;</span><br/><br/>
+          
           <form method="post" action="update.php">
-            <textarea style="height:200px;" class="span9" name="formula" id="text"></textarea><br/>
+            <input type="hidden" name="action" value="updateformula"/>
+            <textarea style="font-family: mono; height:200px;" class="span9" name="formula" id="text"><?php
+              $query = "SELECT formula FROM prefs";
+              $result = mysql_query($query);
+              $fields = mysql_fetch_array($result);
+              echo($fields['formula']);
+            ?></textarea><br/>
             <input class="btn btn-primary btn-large" type="submit" value="Update Formula"/>
           </form>
         </div>

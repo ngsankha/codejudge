@@ -9,6 +9,7 @@
 	require_once('functions.php');
 	include('dbinfo.php');
 	connectdb();
+	$attempts = 0;
 	$query = "SELECT * FROM prefs";
         $result = mysql_query($query);
         $accept = mysql_fetch_array($result);
@@ -34,7 +35,8 @@
 				$tmp = "SELECT attempts FROM solve WHERE (problem_id='".$_POST['id']."' AND username='".$_SESSION['username']."')";
 				$result = mysql_query($tmp);
 				$fields = mysql_fetch_array($result);
-				$query = "UPDATE solve SET lang='".$lang."', attempts='".($fields['attempts']+1)."', soln='".$soln."', filename='".$filename."' WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+				$attempts = $fields['attempts']+1;
+				$query = "UPDATE solve SET lang='".$lang."', attempts='".($attempts)."', soln='".$soln."', filename='".$filename."' WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
 			}
 			mysql_query($query);
 			// connect to the java compiler server to compile the file and fetch the results
@@ -63,7 +65,14 @@
 				} else if($status == 1) {
 					if(trim($contents) == trim(treat($fields['output']))) {
 						// holla! problem solved
-						$query = "UPDATE solve SET status=2 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+						$query = "SELECT `points` FROM `problems` WHERE `sl`=".$_POST['id'];
+						$result = mysql_query($query);
+						$row = mysql_fetch_array($result);
+						$points = $row['points'];
+						include('admin/formula.php');
+						$query = "UPDATE users SET score = score + ".$score." WHERE username = '".$_SESSION['username']."'";
+						mysql_query($query);
+						$query = "UPDATE solve SET score=".$score.", status=2 WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
 						mysql_query($query);
 						header("Location: index.php?success=1");
 					} else {
