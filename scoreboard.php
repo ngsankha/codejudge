@@ -37,7 +37,6 @@
         $query = "SELECT username, status, score FROM users WHERE username!='admin' ORDER BY score DESC";
         $result = mysql_query($query);
        	while($row = mysql_fetch_array($result)) {
-       		echo($row['username']." ".$row['score']);
        		// displays the user, problems solved and attempted
        		$sql = "SELECT * FROM solve WHERE (status='2' AND username='".$row['username']."')";
        		$res = mysql_query($sql);
