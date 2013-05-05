@@ -85,31 +85,33 @@ public class RequestThread extends Thread {
 	
 	// method to return the compiler errors
 	public String compileErrors() {
-		String line, content = "";
+		String line = "";
+		StringBuilder content = new StringBuilder();
 		try {
 			BufferedReader fin = new BufferedReader(new InputStreamReader(new FileInputStream(dir.getAbsolutePath() + "/err.txt")));
 			while((line = fin.readLine()) != null)
-				content += (line + "\n");
+				content.append(line + "\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return content.trim();
+		return content.toString().trim();
 	}
 	
 	// method to return the execution output
 	public String execMsg() {
-		String line, content = "";
+		String line = "";
+		StringBuilder content = new StringBuilder();
 		try {
 			BufferedReader fin = new BufferedReader(new InputStreamReader(new FileInputStream(dir.getAbsolutePath() + "/out.txt")));
 			while((line = fin.readLine()) != null)
-				content += (line + "\n");
+				content.append(line + "\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return content.trim();
+		return content.toString().trim();
 	}
 }
