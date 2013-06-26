@@ -47,10 +47,12 @@
         $query = "SELECT status FROM users WHERE username='".$_SESSION['username']."'";
         $result = mysql_query($query);
         $status = mysql_fetch_array($result);
-        if($accept['accept'] == 0)
+        if($accept['end'] < time())
           echo("<div class=\"alert alert-error\">\nSubmissions are closed now!\n</div>");
         if($status['status'] == 0)
           echo("<div class=\"alert alert-error\">\nYou have been banned. You cannot submit a solution.\n</div>");
+	if($accept['start']>time())
+	  header('location:index.php');
       ?>
     <h1><small>Submit Solution</small></h1>
       <?php
@@ -105,7 +107,7 @@
       Filename: <input class="span8" type="text" id="filename" name="filename" value="<?php if(!($num == 0)) echo($fields['filename']);?>"/>
       <br/>Type your program below:<br/><br/>
       <textarea style="font-family: mono; height:400px;" class="span9" name="soln" id="text"><?php if(!($num == 0)) echo($fields['soln']);?></textarea><br/>
-      <?php if($accept['accept'] == 1 and $status['status'] == 1) echo("<input type=\"submit\" value=\"Run\" class=\"btn btn-primary btn-large\"/>");
+      <?php if($accept['end'] > time() and $status['status'] == 1) echo("<input type=\"submit\" value=\"Run\" class=\"btn btn-primary btn-large\"/>");
             else echo("<input type=\"submit\" value=\"Run\" class=\"btn disabled btn-large\" disabled=\"disabled\"/>");
       ?>
       <span class="label label-info">You are allowed to use any of the following languages: 
