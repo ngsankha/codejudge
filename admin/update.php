@@ -8,6 +8,7 @@
  */
 	include('../functions.php');
 	connectdb();
+	date_default_timezone_set('Asia/Kolkata');
 	if(isset($_POST['action'])){
 		if($_POST['action']=='email') {
 			// update the admin email
@@ -39,12 +40,15 @@
 			if(trim($_POST['name']) == "")
 				header("Location: index.php?derror=1");
 			else {
-				if($_POST['accept']=='on') $accept=1; else $accept=0;
+				list($day, $month, $year, $hour, $minute) = split('[/ :]', $_POST['start']);
+				$start=mktime($hour, $minute,0, $month, $day, $year);
+				list($day, $month, $year, $hour, $minute) = split('[/ :]', $_POST['end']);
+				$end=mktime($hour, $minute,0, $month, $day, $year);
 				if($_POST['c']=='on') $c=1; else $c=0;
 				if($_POST['cpp']=='on') $cpp=1; else $cpp=0;
 				if($_POST['java']=='on') $java=1; else $java=0;
 				if($_POST['python']=='on') $python=1; else $python=0;
-				mysql_query("UPDATE prefs SET name='".mysql_real_escape_string($_POST['name'])."', accept=$accept, c=$c, cpp=$cpp, java=$java, python=$python");
+				mysql_query("UPDATE prefs SET name='".mysql_real_escape_string($_POST['name'])."', start=$start, end=$end, c=$c, cpp=$cpp, java=$java, python=$python");
 				header("Location: index.php?changed=1");
 			}
 		} else if($_POST['action']=='addproblem') {
