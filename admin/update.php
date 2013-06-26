@@ -8,7 +8,7 @@
  */
 	include('../functions.php');
 	connectdb();
-	date_default_timezone_set('Asia/Kolkata');
+	date_default_timezone_set('UTC');
 	if(isset($_POST['action'])){
 		if($_POST['action']=='email') {
 			// update the admin email

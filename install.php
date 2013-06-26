@@ -37,7 +37,7 @@
 )");
 		// fill it with default preferences
 		mysql_query("INSERT INTO `prefs` (`name`, `start`, 'end', `c`, `cpp`, `java`, `python`, `forumla`) VALUES
-('Codejudge', 01/01/70 05:30:00, 01/01/70 05:30:00, 1, 1, 1,'\$score = \$points / \$attempts')");
+('Codejudge', 01/01/70 00:00:00, 01/01/70 00:00:00, 1, 1, 1,'\$score = \$points / \$attempts')");
 		// create the problems table
 		mysql_query("CREATE TABLE IF NOT EXISTS `problems` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
