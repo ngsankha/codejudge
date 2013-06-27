@@ -19,7 +19,7 @@
 	if (!preg_match("/^[^\\/?* :;{}\\\\]+\\.[^\\/?*: ;{}\\\\]{1,4}$/", $_POST['filename']))
 		header("Location: solve.php?ferror=1&id=".$_POST['id']); // invalid filename
         // check if the user is banned or allowed to submit and SQL Injection checks
-        else if($accept['accept'] == 1 and $status['status'] == 1 and is_numeric($_POST['id'])) {
+        else if($accept['end'] > time() and $status['status'] == 1 and is_numeric($_POST['id'])) {
         	$soln = mysql_real_escape_string($_POST['soln']);
         	$filename = mysql_real_escape_string($_POST['filename']);
         	$lang = mysql_real_escape_string($_POST['lang']);
