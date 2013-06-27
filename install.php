@@ -57,7 +57,6 @@
   `status` int(11) NOT NULL DEFAULT '1',
   `attempts` int(11) NOT NULL DEFAULT '1',
   `soln` text NOT NULL,
-  `filename` varchar(25) NOT NULL,
   `lang` varchar(20) NOT NULL,
   `score` float NOT NULL,
   `time` bigint(20) NOT NULL,
