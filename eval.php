@@ -46,7 +46,7 @@
 			// connect to the java compiler server to compile the file and fetch the results
 			$socket = fsockopen($compilerhost, $compilerport);
 			if($socket) {
-				fwrite($socket, 'solution.'.$ext."\n");
+				fwrite($socket, 'Solution.'.$ext."\n");
 				$query = "SELECT time, input, output FROM problems WHERE sl='".$_POST['id']."'";
 				$result = mysql_query($query);
 				$fields = mysql_fetch_array($result);
