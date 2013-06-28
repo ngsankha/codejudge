@@ -140,11 +140,13 @@
 	<script src="js/clike.js"></script>
 	<script src="js/python.js"></script>
 	<script src="js/matchbrackets.js"></script>
+	<script src="js/closebrackets.js"></script>
     <script>
 	var editor = CodeMirror.fromTextArea(document.getElementById("text"), {
             lineNumbers: true,
             matchBrackets: true,
 	    indentUnit: 4,
+	    autoCloseBrackets: true,
             mode: "text/x-csrc"
           });
       function changeSyntax(lang) {
