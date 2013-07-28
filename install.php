@@ -8,24 +8,27 @@
  */
 	require_once('functions.php');
 	if(isset($_POST['host'])) {
-		// create file 'dbinfo.php'
-		$fp = fopen('dbinfo.php','w');
-		$l1 = '$host="'.$_POST['host'].'";';
-		$l2 = '$user="'.$_POST['username'].'";';
-		$l3 = '$password="'.$_POST['password'].'";';
-		$l4 = '$database="'.$_POST['name'].'";';
-		$l5 = '$compilerhost="'.$_POST['chost'].'";';
-		$l6 = '$compilerport='.$_POST['cport'].';';
-		fwrite($fp, "<?php\n$l1\n$l2\n$l3\n$l4\n$l5\n$l6\n?>");
-		fclose($fp);
-		include('dbinfo.php');
 		// connect to the MySQL server
-		mysql_connect($host,$user,$password);
-		// create the database
-		mysql_query("CREATE DATABASE $database");
-		mysql_select_db($database) or die('Error connecting to database.');
-		// create the preferences table
-		mysql_query("CREATE TABLE IF NOT EXISTS `prefs` (
+		$link=mysql_connect($_POST['host'],$_POST['username'],$_POST['password']);
+    if (!$link) {
+      die('Could not connect');
+    } else {
+      // create file 'dbinfo.php'
+      $fp = fopen('dbinfo.php','w');
+      $l1 = '$host="'.$_POST['host'].'";';
+      $l2 = '$user="'.$_POST['username'].'";';
+      $l3 = '$password="'.$_POST['password'].'";';
+      $l4 = '$database="'.$_POST['name'].'";';
+      $l5 = '$compilerhost="'.$_POST['chost'].'";';
+      $l6 = '$compilerport='.$_POST['cport'].';';
+      fwrite($fp, "<?php\n$l1\n$l2\n$l3\n$l4\n$l5\n$l6\n?>");
+      fclose($fp);
+      include('dbinfo.php');
+		  // create the database
+		  mysql_query("CREATE DATABASE $database");
+		  mysql_select_db($database) or die('Error connecting to database.');
+		  // create the preferences table
+		  mysql_query("CREATE TABLE IF NOT EXISTS `prefs` (
   `name` varchar(30) NOT NULL,
   `start` int(11) NOT NULL,
   `end` int(11) NOT NULL,
@@ -35,11 +38,11 @@
   `python` int(11) NOT NULL,
   `formula` text NOT NULL
 )");
-		// fill it with default preferences
-		mysql_query("INSERT INTO `prefs` (`name`, `start`, 'end', `c`, `cpp`, `java`, `python`, `forumla`) VALUES
+		  // fill it with default preferences
+		  mysql_query("INSERT INTO `prefs` (`name`, `start`, 'end', `c`, `cpp`, `java`, `python`, `forumla`) VALUES
 ('Codejudge', 01/01/70 00:00:00, 01/01/70 00:00:00, 1, 1, 1,'\$score = \$points / \$attempts')");
-		// create the problems table
-		mysql_query("CREATE TABLE IF NOT EXISTS `problems` (
+		  // create the problems table
+		  mysql_query("CREATE TABLE IF NOT EXISTS `problems` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `text` text NOT NULL,
@@ -49,8 +52,8 @@
   `points` int(11) NOT NULL,
   PRIMARY KEY (`sl`)
 )");
-		// create the solve table
-		mysql_query("CREATE TABLE IF NOT EXISTS `solve` (
+		  // create the solve table
+		  mysql_query("CREATE TABLE IF NOT EXISTS `solve` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
   `problem_id` int(11) NOT NULL,
   `username` varchar(25) NOT NULL,
@@ -62,8 +65,8 @@
   `time` bigint(20) NOT NULL,
   PRIMARY KEY (`sl`)
 )");
-		// create the users table
-		mysql_query("CREATE TABLE IF NOT EXISTS `users` (
+		  // create the users table
+		  mysql_query("CREATE TABLE IF NOT EXISTS `users` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(25) NOT NULL,
   `salt` varchar(6) NOT NULL,
@@ -73,14 +76,15 @@
   `score` float NOT NULL,
   PRIMARY KEY (`sl`)
 )");
-		// create the user 'admin' with password 'admin'
-		$salt=randomAlphaNum(5);
-		$pass="admin";
-		$hash=crypt($pass,$salt);
-		$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('$pass', '$salt', '$hash', '".$_POST['email']."')";
-		mysql_query($sql);
-		header("Location: install.php?installed=1");
-	}
+		  // create the user 'admin' with password 'admin'
+		  $salt=randomAlphaNum(5);
+		  $pass="admin";
+		  $hash=crypt($pass,$salt);
+		  $sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('$pass', '$salt', '$hash', '".$_POST['email']."')";
+		  mysql_query($sql);
+		  header("Location: install.php?installed=1");
+	  }
+ } 
 ?>
 <!DOCTYPE html>
 <html lang="en"><head>
