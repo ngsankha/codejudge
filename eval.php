@@ -30,11 +30,7 @@
 				$query = "INSERT INTO `solve` ( `problem_id` , `username`, `soln`, `lang`, `time`) VALUES ('".$_POST['id']."', '".$_SESSION['username']."', '".$soln."', '".$lang."', '".time()."')";
 			else {
 				// update database if it is a re-submission
-				$tmp = "SELECT attempts FROM solve WHERE (problem_id='".$_POST['id']."' AND username='".$_SESSION['username']."')";
-				$result = mysql_query($tmp);
-				$fields = mysql_fetch_array($result);
-				$attempts = $fields['attempts']+1;
-				$query = "UPDATE solve SET time='".time()."', lang='".$lang."', attempts='".($attempts)."', soln='".$soln."', WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
+				$query = "UPDATE solve SET time='".time()."', lang='".$lang."', attempts=attempts+1, soln='".$soln."', filename='".$filename."' WHERE (username='".$_SESSION['username']."' AND problem_id='".$_POST['id']."')";
 			}
 			mysql_query($query);
 			switch($lang) {
