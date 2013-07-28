@@ -29,10 +29,16 @@
         if(isset($_GET['success']))
           echo("<div class=\"alert alert-success\">\nCongratulations! You have solved the problem successfully.\n</div>");
     ?>
-    Below is a list of available problems for you to solve.<br/><br/>
-      <ul class="nav nav-list">
-        <li class="nav-header">AVAILABLE PROBLEMS</li>
-        <?php
+    <?php
+	$query = "SELECT * FROM prefs";
+        $result = mysql_query($query);
+        $accept = mysql_fetch_array($result);
+	if($accept['start']>time())
+	  echo("<div class=\"alert alert-error\">\nThe contest has not started yet.\n</div>");
+	else{
+    echo"Below is a list of available problems for you to solve.<br/><br/>";
+      echo"<ul class=\"nav nav-list\">";
+        echo"<li class=\"nav-header\">AVAILABLE PROBLEMS</li>";
         	// list all the problems from the database
         	$query = "SELECT * FROM problems";
           	$result = mysql_query($query);
@@ -58,6 +64,7 @@
           	        		echo("<li><a href=\"index.php?id=".$row['sl']."\">".$row['name'].$tag."</a></li>\n");
           	    	}
 		}
+	}
 	?>
       </ul>
       <?php

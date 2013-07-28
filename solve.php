@@ -13,6 +13,7 @@
 		include('header.php');
 		connectdb();
 ?>
+	<link rel="stylesheet" href="css/codemirror.css">
               <li><a href="index.php">Problems</a></li>
               <li><a href="submissions.php">Submissions</a></li>
               <li><a href="scoreboard.php">Scoreboard</a></li>
@@ -38,8 +39,6 @@
           echo("<div class=\"alert alert-error\">\nCould not connect to the compiler server. Please contact the admin to solve the problem.\n</div>");
         else if(isset($_GET['derror']))
           echo("<div class=\"alert alert-error\">\nPlease enter all the details asked before you can continue!\n</div>");
-        else if(isset($_GET['ferror']))
-          echo("<div class=\"alert alert-error\">\nPlease enter a legal filename.\n</div>");
           
         $query = "SELECT * FROM prefs";
         $result = mysql_query($query);
@@ -47,10 +46,12 @@
         $query = "SELECT status FROM users WHERE username='".$_SESSION['username']."'";
         $result = mysql_query($query);
         $status = mysql_fetch_array($result);
-        if($accept['accept'] == 0)
+        if($accept['end'] < time())
           echo("<div class=\"alert alert-error\">\nSubmissions are closed now!\n</div>");
         if($status['status'] == 0)
           echo("<div class=\"alert alert-error\">\nYou have been banned. You cannot submit a solution.\n</div>");
+	if($accept['start']>time())
+	  header('location:index.php');
       ?>
     <h1><small>Submit Solution</small></h1>
       <?php
@@ -95,17 +96,15 @@
         ?>
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li><a href="#" onclick="changeLang('C');">C</a></li>
-          <li><a href="#" onclick="changeLang('C++');">C++</a></li>
-          <li><a href="#" onclick="changeLang('Java');">Java</a></li>
-          <li><a href="#" onclick="changeLang('Python');">Python</a></li>
+          <li><a href="#" onclick="changeLang('C');changeSyntax('C');">C</a></li>
+          <li><a href="#" onclick="changeLang('C++');changeSyntax('C++');">C++</a></li>
+          <li><a href="#" onclick="changeLang('Java');changeSyntax('Java');">Java</a></li>
+          <li><a href="#" onclick="changeLang('Python');changeSyntax('Python');">Python</a></li>
         </ul>
       </div>
-      <br/>
-      Filename: <input class="span8" type="text" id="filename" name="filename" value="<?php if(!($num == 0)) echo($fields['filename']);?>"/>
       <br/>Type your program below:<br/><br/>
-      <textarea style="font-family: mono; height:400px;" class="span9" name="soln" id="text"><?php if(!($num == 0)) echo($fields['soln']);?></textarea><br/>
-      <?php if($accept['accept'] == 1 and $status['status'] == 1) echo("<input type=\"submit\" value=\"Run\" class=\"btn btn-primary btn-large\"/>");
+      <textarea style="font-family: mono; height:400px;" class="span9" name="soln" id="text"><?php if(!($num == 0)) echo($fields['soln']); else echo "// For Java users : Name your class 'Solution'";?></textarea><br/>
+      <?php if($accept['end'] > time() and $status['status'] == 1) echo("<input type=\"submit\" value=\"Run\" class=\"btn btn-primary btn-large\"/>");
             else echo("<input type=\"submit\" value=\"Run\" class=\"btn disabled btn-large\" disabled=\"disabled\"/>");
       ?>
       <span class="label label-info">You are allowed to use any of the following languages: 
@@ -136,6 +135,37 @@
         else if(lang== 'Python')
           $('#hlang').val('python');
       }
+    </script>
+	<script src="js/codemirror.js"></script>
+	<script src="js/clike.js"></script>
+	<script src="js/python.js"></script>
+	<script src="js/matchbrackets.js"></script>
+	<script src="js/closebrackets.js"></script>
+    <script>
+	var editor = CodeMirror.fromTextArea(document.getElementById("text"), {
+            lineNumbers: true,
+            matchBrackets: true,
+	    indentUnit: 4,
+	    autoCloseBrackets: true,
+            mode: "text/x-csrc"
+          });
+      function changeSyntax(lang) {
+	if(lang=='C')
+	  editor.setOption("mode", "text/x-csrc");
+	else if(lang=='C++')
+	  editor.setOption("mode", "text/x-c++src");
+	else if(lang=='Java')
+	  editor.setOption("mode", "text/x-java");
+	else if(lang=='Python')
+	  editor.setOption("mode", "text/x-python");
+      }
+      var num="<?php echo $num;?>";
+      var lang="<?php echo $fields['lang'];?>";
+      if(num == 0) changeSyntax('C');
+      else if(lang=='c') changeSyntax('C');
+      else if(lang=='cpp') changeSyntax('C++');
+      else if(lang=='java') changeSyntax('Java');
+      else if(lang=='python') changeSyntax('Python');
     </script>
 <?php
 	include('footer.php');
