@@ -62,9 +62,13 @@
   `soln` text NOT NULL,
   `lang` varchar(20) NOT NULL,
   `score` float NOT NULL,
+  `filename` text NOT NULL,
+  `compileStatus` text NOT NULL,
   `time` bigint(20) NOT NULL,
   PRIMARY KEY (`sl`)
 )");
+
+
 		  // create the users table
 		  mysql_query("CREATE TABLE IF NOT EXISTS `users` (
   `sl` int(11) NOT NULL AUTO_INCREMENT,
