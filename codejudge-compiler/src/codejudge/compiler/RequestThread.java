@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -22,7 +23,16 @@ import codejudge.compiler.languages.C;
 import codejudge.compiler.languages.Cpp;
 import codejudge.compiler.languages.Java;
 import codejudge.compiler.languages.Language;
+import codejudge.compiler.languages.Php;
 import codejudge.compiler.languages.Python;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
+import java.util.Properties;
 
 public class RequestThread extends Thread {
 	
@@ -41,12 +51,25 @@ public class RequestThread extends Thread {
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-			// read input from the PHP script
-			String file = in.readLine();
-			int timeout = Integer.parseInt(in.readLine());
-			String contents = in.readLine().replace("$_n_$", "\n");
-			String input = in.readLine().replace("$_n_$", "\n");
-			String lang = in.readLine();
+			// read rowid from the PHP script
+			String rowid=in.readLine();
+			BufferedReader dbconfigin=new BufferedReader(new FileReader("dbconfig"));
+			Properties p=new Properties();
+			p.load(dbconfigin);
+			String host=p.getProperty("host");
+			String database=p.getProperty("db");
+			String username=p.getProperty("username");
+			String password=p.getProperty("password");
+			String url = "jdbc:mysql://"+host+":3306/"+database;
+			DataBaseConnector dbin=new DataBaseConnector(rowid);
+			Statement statement=dbin.dbconnect(url, username, password);
+			dbin.init(statement);
+			String file = dbin.getfilename();
+			int timeout = (dbin.gettimeout());
+			String contents = dbin.getsolution();
+			String input = dbin.getinput();
+			String lang = dbin.getlang();
+			String output=dbin.getoutput();
 			System.out.println("Compiling " + file + "...");
 			// create the sample input file
 			PrintWriter writer = new PrintWriter(new FileOutputStream("stage/" + n +"/in.txt"));
@@ -62,19 +85,28 @@ public class RequestThread extends Thread {
 				l = new Java(file, timeout, contents, dir.getAbsolutePath());
 			else if(lang.equals("python"))
 				l = new Python(file, timeout, contents, dir.getAbsolutePath());
+			else if(lang.equals("php"))
+				l = new Php(file, timeout, contents, dir.getAbsolutePath());
 			l.compile(); // compile the file
 			String errors = compileErrors();
 			if(!errors.equals("")) { // check for compilation errors
-				out.println("0");
+				dbin.setstatus(statement, 1, errors); 
 				out.println(errors);
 			} else {
 				// execute the program and return output
 				l.execute();
-				if(l.timedout)
-					out.println(2);
+				if(l.timedout){
+					dbin.setstatus(statement, 2);
+					
+				}
 				else {
-					out.println("1");
-					out.println(execMsg());
+					
+					
+					String user_output=execMsg();
+					if(user_output.trim().equals(output))
+						dbin.setstatus(statement, 3);
+					else dbin.setstatus(statement, 4); 
+					
 				}
 			}
 			s.close();
@@ -85,33 +117,32 @@ public class RequestThread extends Thread {
 	
 	// method to return the compiler errors
 	public String compileErrors() {
-		String line = "";
-		StringBuilder content = new StringBuilder();
+		String line, content = "";
 		try {
 			BufferedReader fin = new BufferedReader(new InputStreamReader(new FileInputStream(dir.getAbsolutePath() + "/err.txt")));
 			while((line = fin.readLine()) != null)
-				content.append(line + "\n");
+				content += (line + "\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return content.toString().trim();
+		return content.trim();
 	}
 	
 	// method to return the execution output
 	public String execMsg() {
-		String line = "";
-		StringBuilder content = new StringBuilder();
+		String line, content = "";
 		try {
 			BufferedReader fin = new BufferedReader(new InputStreamReader(new FileInputStream(dir.getAbsolutePath() + "/out.txt")));
 			while((line = fin.readLine()) != null)
-				content.append(line + "\n");
+				content += (line + "\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return content.toString().trim();
+		return content.trim();
 	}
+	
 }
