@@ -10,7 +10,7 @@
 	if(loggedin())
 		header("Location: index.php");
 	else if(isset($_POST['action'])) {
-		$username = mysql_real_escape_string($_POST['username']);
+		$username = array_key_exists('username', $_POST) ? trim($_POST['username']) : null;
 		if($_POST['action']=='login') {
 			if(trim($username) == "" or trim($_POST['password']) == ""){
 				header("Location: login.php?derror=1"); // empty entry
