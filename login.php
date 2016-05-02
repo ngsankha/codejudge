@@ -10,11 +10,11 @@
 	if(loggedin())
 		header("Location: index.php");
 	else if(isset($_POST['action'])) {
-		$username = mysql_real_escape_string($_POST['username']);
+		$username = array_key_exists('username', $_POST) ? mysql_real_escape_string(trim($_POST['username'])) : "";
 		if($_POST['action']=='login') {
-			if(trim($username) == "" or trim($_POST['password']) == "")
+			if(trim($username) == "" or trim($_POST['password']) == "") {
 				header("Location: login.php?derror=1"); // empty entry
-			else {
+			} else {
 				// code to login the user and start a session
 				connectdb();
 				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
@@ -29,20 +29,20 @@
 			}
 		} else if($_POST['action']=='register') {
 			// register the user
-			$email = mysql_real_escape_string($_POST['email']);
-			if(trim($username) == "" or trim($_POST['password']) == "" or trim($email) == "")
+      $email = array_key_exists('email', $_POST) ? mysql_real_escape_string(trim($_POST['email'])) : "";
+			if(trim($username) == "" and trim($_POST['password']) == "" and trim($email) == "") {
 				header("Location: login.php?derror=1"); // empty entry
-			else {
+			} else {
 				// create the entry in the users table
 				connectdb();
 				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
 				$result = mysql_query($query);
-				if(mysql_num_rows($result)!=0)
+				if(mysql_num_rows($result)!=0) {
 					header("Location: login.php?exists=1");
-				else {
+				} else {
 					$salt = randomAlphaNum(5);
 					$hash = crypt($_POST['password'], $salt);
-					$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email` ) VALUES ('".$username."', '$salt', '$hash', '".$email."')";
+					$sql="INSERT INTO `users` ( `username` , `salt` , `hash` , `email`, `status` ) VALUES ('".$username."', '$salt', '$hash', '".$email."', '1')";
 					mysql_query($sql);
 					header("Location: login.php?registered=1");
 				}
