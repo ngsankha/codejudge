@@ -22,6 +22,7 @@ import codejudge.compiler.languages.C;
 import codejudge.compiler.languages.Cpp;
 import codejudge.compiler.languages.Java;
 import codejudge.compiler.languages.Language;
+import codejudge.compiler.languages.LanguageFactory;
 import codejudge.compiler.languages.Python;
 
 public class RequestThread extends Thread {
@@ -54,14 +55,7 @@ public class RequestThread extends Thread {
 			writer.close();
 			Language l = null;
 			// create the language specific compiler
-			if(lang.equals("c"))
-				l = new C(file, timeout, contents, dir.getAbsolutePath());
-			else if(lang.equals("cpp"))
-				l = new Cpp(file, timeout, contents, dir.getAbsolutePath());
-			else if(lang.equals("java"))
-				l = new Java(file, timeout, contents, dir.getAbsolutePath());
-			else if(lang.equals("python"))
-				l = new Python(file, timeout, contents, dir.getAbsolutePath());
+			l = LanguageFactory.getInstance(lang, file, timeout, contents, dir.getAbsolutePath());
 			l.compile(); // compile the file
 			String errors = compileErrors();
 			if(!errors.equals("")) { // check for compilation errors
@@ -85,31 +79,33 @@ public class RequestThread extends Thread {
 	
 	// method to return the compiler errors
 	public String compileErrors() {
-		String line, content = "";
+		String line = "";
+		StringBuilder content = new StringBuilder();
 		try {
 			BufferedReader fin = new BufferedReader(new InputStreamReader(new FileInputStream(dir.getAbsolutePath() + "/err.txt")));
 			while((line = fin.readLine()) != null)
-				content += (line + "\n");
+				content.append(line + "\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return content.trim();
+		return content.toString().trim();
 	}
 	
 	// method to return the execution output
 	public String execMsg() {
-		String line, content = "";
+		String line = "";
+		StringBuilder content = new StringBuilder();
 		try {
 			BufferedReader fin = new BufferedReader(new InputStreamReader(new FileInputStream(dir.getAbsolutePath() + "/out.txt")));
 			while((line = fin.readLine()) != null)
-				content += (line + "\n");
+				content.append(line + "\n");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return content.trim();
+		return content.toString().trim();
 	}
 }
