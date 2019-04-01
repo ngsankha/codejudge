@@ -14,6 +14,7 @@
 	else
 		include('header.php');
 		connectdb();
+	date_default_timezone_set('UTC');
 ?>
               <li class="active"><a href="#">Admin Panel</a></li>
               <li><a href="users.php">Users</a></li>
@@ -37,18 +38,20 @@
       <ul class="nav nav-tabs">
         <li class="active"><a href="#">General</a></li>
         <li><a href="problems.php">Problems</a></li>
+        <li><a href="scoring.php">Scoring</a></li>
       </ul>
       <div>
         <div>
           <form method="post" action="update.php">
           <?php
-          	$query = "SELECT name, accept, c, cpp, java, python FROM prefs";
+          	$query = "SELECT name, start, end, c, cpp, java, python FROM prefs";
           	$result = mysql_query($query);
           	$fields = mysql_fetch_array($result);
           ?>
           <input type="hidden" name="action" value="settings"/>
           Name of event: <input name="name" type="text" value="<?php echo($fields['name']);?>"/><br/>
-          <input name="accept" type="checkbox" <?php if($fields['accept']==1) echo("checked=\"true\"");?>/> <span class="label label-important">Accept submissions</span><br/>
+          Start Time in UTC (dd/mm/yy hh:mm:ss): <input name="start" type="text" value="<?php echo(date('d/m/y H:i:s',$fields['start']));?>"/><br/>
+          End Time in UTC (dd/mm/yy hh:mm:ss): <input name="end" type="text" value="<?php echo(date('d/m/y H:i:s',$fields['end']));?>"/><br/>
           <h1><small>Languages</small></h1>
           <input name="c" type="checkbox" <?php if($fields['c']==1) echo("checked=\"true\"");?>/> C<br/>
           <input name="cpp" type="checkbox" <?php if($fields['cpp']==1) echo("checked=\"true\"");?>/> C++<br/>

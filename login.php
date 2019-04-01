@@ -6,6 +6,9 @@
  *
  * Codejudge Login page
  */
+ 
+ error_reporting(1);
+ 
 	require_once('functions.php');
 	if(loggedin())
 		header("Location: index.php");
@@ -17,7 +20,7 @@
 			} else {
 				// code to login the user and start a session
 				connectdb();
-				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
+				$query = "SELECT salt,hash FROM users WHERE username=".$username;
 				$result = mysql_query($query);
 				$fields = mysql_fetch_array($result);
 				$currhash = crypt($_POST['password'], $fields['salt']);
@@ -35,7 +38,7 @@
 			} else {
 				// create the entry in the users table
 				connectdb();
-				$query = "SELECT salt,hash FROM users WHERE username='".$username."'";
+				$query = "SELECT salt,hash FROM users WHERE username=".$username;
 				$result = mysql_query($query);
 				if(mysql_num_rows($result)!=0) {
 					header("Location: login.php?exists=1");
@@ -54,7 +57,7 @@
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title><?php echo(getName()); ?> Login</title>
+    <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -96,7 +99,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#"><?php echo(getName()); ?></a>
+          <a class="brand">Welcome to the CodeJudge</a>
         </div>
       </div>
     </div>

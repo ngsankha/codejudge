@@ -34,7 +34,7 @@
       </tr></thead>
       <tbody>
       <?php
-        $query = "SELECT username, status FROM users WHERE username!='admin'";
+        $query = "SELECT username, status, score FROM users WHERE username!='admin' ORDER BY score DESC";
         $result = mysql_query($query);
        	while($row = mysql_fetch_array($result)) {
        		// displays the user, problems solved and attempted
